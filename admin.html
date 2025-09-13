@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品管理 - 产品商店</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 20px 20px;
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-nav-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .admin-nav-btn.active {
+            background: #ffd700;
+            color: #333;
+        }
+        
+        .admin-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+        }
+        
+        .btn-danger:hover {
+            background: #ff3742;
+        }
+        
+        .btn-success {
+            background: #2ed573;
+        }
+        
+        .btn-success:hover {
+            background: #1dd65a;
+        }
+        
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .products-table th,
+        .products-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .products-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .products-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .product-image-small {
+            width: 50px;
+            height: 50px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .back-to-store {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-to-store:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-nav {
+                flex-wrap: wrap;
+            }
+            
+            .products-table {
+                font-size: 0.9rem;
+            }
+            
+            .products-table th,
+            .products-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-to-store">
+        <i class="fas fa-arrow-left"></i> 返回商店
+    </a>
+    
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-cogs"></i> 产品管理系统</h1>
+            <p>管理您的产品库存和订单</p>
+            
+            <div class="admin-nav">
+                <button class="admin-nav-btn active" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> 仪表板
+                </button>
+                <button class="admin-nav-btn" onclick="showSection('products')">
+                    <i class="fas fa-box"></i> 产品管理
+                </button>
+                <button class="admin-nav-btn" onclick="showSection('add-product')">
+                    <i class="fas fa-plus"></i> 添加产品
+                </button>
+                <button class="admin-nav-btn" onclick="showSection('orders')">
+                    <i class="fas fa-shopping-bag"></i> 订单管理
+                </button>
+            </div>
+        </div>
+        
+        <!-- 仪表板 -->
+        <div id="dashboard" class="admin-section active">
+            <h2>仪表板概览</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalProducts">0</h3>
+                    <p>总产品数</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalOrders">0</h3>
+                    <p>总订单数</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalRevenue">¥0</h3>
+                    <p>总收入</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="cartItems">0</h3>
+                    <p>购物车商品</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 产品管理 -->
+        <div id="products" class="admin-section">
+            <h2>产品管理</h2>
+            <div style="margin-bottom: 1rem;">
+                <input type="text" id="searchProducts" placeholder="搜索产品..." style="width: 300px; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 8px;">
+                <button class="btn" onclick="searchProducts()">
+                    <i class="fas fa-search"></i> 搜索
+                </button>
+            </div>
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>图片</th>
+                        <th>产品名称</th>
+                        <th>价格</th>
+                        <th>类别</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                    <!-- 产品列表将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 添加产品 -->
+        <div id="add-product" class="admin-section">
+            <h2>添加新产品</h2>
+            <form id="addProductForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productTitle">产品名称 *</label>
+                        <input type="text" id="productTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">价格 *</label>
+                        <input type="number" id="productPrice" step="0.01" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCategory">类别 *</label>
+                        <select id="productCategory" required>
+                            <option value="">选择类别</option>
+                            <option value="电子产品">电子产品</option>
+                            <option value="服装鞋帽">服装鞋帽</option>
+                            <option value="家用电器">家用电器</option>
+                            <option value="图书文具">图书文具</option>
+                            <option value="运动户外">运动户外</option>
+                            <option value="美妆护肤">美妆护肤</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">产品图标</label>
+                        <select id="productImage">
+                            <option value="📱">📱 手机</option>
+                            <option value="💻">💻 电脑</option>
+                            <option value="🎧">🎧 耳机</option>
+                            <option value="⌚">⌚ 手表</option>
+                            <option value="👟">👟 鞋子</option>
+                            <option value="🎒">🎒 背包</option>
+                            <option value="☕">☕ 咖啡</option>
+                            <option value="🌬️">🌬️ 净化器</option>
+                            <option value="📚">📚 书籍</option>
+                            <option value="🏃">🏃 运动</option>
+                            <option value="💄">💄 美妆</option>
+                            <option value="🎮">🎮 游戏</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">产品描述 *</label>
+                    <textarea id="productDescription" rows="4" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-plus"></i> 添加产品
+                </button>
+                <button type="button" class="btn" onclick="resetForm()">
+                    <i class="fas fa-undo"></i> 重置
+                </button>
+            </form>
+        </div>
+        
+        <!-- 订单管理 -->
+        <div id="orders" class="admin-section">
+            <h2>订单管理</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="pendingOrders">0</h3>
+                    <p>待处理订单</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="completedOrders">0</h3>
+                    <p>已完成订单</p>
+                </div>
+            </div>
+            <p style="text-align: center; color: #666; padding: 2rem;">
+                <i class="fas fa-info-circle"></i> 订单管理功能将在后续版本中实现
+            </p>
+        </div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>
