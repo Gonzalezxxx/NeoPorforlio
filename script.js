@@ -141,9 +141,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 渲染产品列表
 function renderProducts() {
+    console.log('开始渲染产品，产品数量:', products.length);
+    console.log('产品数据:', products);
+    
+    if (!productsGrid) {
+        console.error('productsGrid元素未找到！');
+        return;
+    }
+    
     productsGrid.innerHTML = '';
     
-    products.forEach(product => {
+    if (products.length === 0) {
+        console.log('没有产品数据，显示空状态');
+        productsGrid.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">暂无产品数据</div>';
+        return;
+    }
+    
+    products.forEach((product, index) => {
+        console.log(`渲染产品 ${index + 1}:`, product.title);
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         productCard.innerHTML = `
@@ -161,6 +176,8 @@ function renderProducts() {
         `;
         productsGrid.appendChild(productCard);
     });
+    
+    console.log('产品渲染完成');
 }
 
 // 添加到购物车

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品同步调试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .btn { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #0056b3; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .product { background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 产品同步调试工具</h1>
+        
+        <div class="status info">
+            <strong>调试步骤：</strong><br>
+            1. 点击"检查Local Storage"查看当前数据<br>
+            2. 点击"添加测试产品"添加一个测试产品<br>
+            3. 点击"检查Local Storage"再次查看数据变化<br>
+            4. 打开主页面查看产品是否显示
+        </div>
+        
+        <div>
+            <button class="btn" onclick="checkLocalStorage()">🔍 检查Local Storage</button>
+            <button class="btn" onclick="addTestProduct()">➕ 添加测试产品</button>
+            <button class="btn" onclick="clearAllProducts()">🗑️ 清除所有产品</button>
+            <button class="btn" onclick="openMainPage()">🏠 打开主页面</button>
+        </div>
+        
+        <div id="status" class="status info">点击"检查Local Storage"开始调试</div>
+        
+        <div id="products"></div>
+        
+        <div class="status info">
+            <strong>如果主页面仍然不显示新产品：</strong><br>
+            1. 打开主页面后按F12打开开发者工具<br>
+            2. 点击Console标签查看错误信息<br>
+            3. 手动点击主页面的"刷新产品列表"按钮
+        </div>
+    </div>
+
+    <script>
+        function checkLocalStorage() {
+            const data = localStorage.getItem('adminProducts');
+            const status = document.getElementById('status');
+            const productsDiv = document.getElementById('products');
+            
+            if (data) {
+                try {
+                    const products = JSON.parse(data);
+                    status.className = 'status success';
+                    status.innerHTML = `✅ 找到产品数据！共 ${products.length} 个产品`;
+                    
+                    let html = '<h3>产品列表：</h3>';
+                    products.forEach(product => {
+                        html += `
+                            <div class="product">
+                                <strong>${product.title}</strong> - ¥${product.price}<br>
+                                <small>${product.description}</small><br>
+                                <small>ID: ${product.id} | 类别: ${product.category}</small>
+                            </div>
+                        `;
+                    });
+                    productsDiv.innerHTML = html;
+                } catch (e) {
+                    status.className = 'status error';
+                    status.innerHTML = `❌ 数据解析错误: ${e.message}`;
+                    productsDiv.innerHTML = '';
+                }
+            } else {
+                status.className = 'status error';
+                status.innerHTML = '❌ 未找到产品数据';
+                productsDiv.innerHTML = '';
+            }
+        }
+        
+        function addTestProduct() {
+            const testProduct = {
+                id: Date.now(),
+                title: `测试产品_${new Date().toLocaleTimeString()}`,
+                description: '这是一个测试产品，用于验证同步功能',
+                price: Math.floor(Math.random() * 1000) + 100,
+                image: '🧪',
+                category: '测试产品',
+                stock: 10,
+                createdAt: new Date().toISOString()
+            };
+            
+            // 获取现有产品
+            let products = [];
+            const existingData = localStorage.getItem('adminProducts');
+            if (existingData) {
+                products = JSON.parse(existingData);
+            }
+            
+            // 添加新产品
+            products.push(testProduct);
+            
+            // 保存到Local Storage
+            localStorage.setItem('adminProducts', JSON.stringify(products));
+            
+            // 触发storage事件
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'adminProducts',
+                newValue: JSON.stringify(products)
+            }));
+            
+            document.getElementById('status').className = 'status success';
+            document.getElementById('status').innerHTML = `✅ 测试产品已添加！产品ID: ${testProduct.id}`;
+            
+            // 自动检查数据
+            setTimeout(checkLocalStorage, 500);
+        }
+        
+        function clearAllProducts() {
+            if (confirm('确定要清除所有产品吗？')) {
+                localStorage.removeItem('adminProducts');
+                document.getElementById('status').className = 'status info';
+                document.getElementById('status').innerHTML = '🗑️ 所有产品已清除';
+                document.getElementById('products').innerHTML = '';
+            }
+        }
+        
+        function openMainPage() {
+            window.open('index.html', '_blank');
+        }
+        
+        // 页面加载时自动检查
+        window.addEventListener('load', function() {
+            checkLocalStorage();
+        });
+    </script>
+</body>
+</html>
