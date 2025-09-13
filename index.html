@@ -107,6 +107,12 @@
     <section id="products" class="products-section">
         <div class="container">
             <h2 class="section-title">热门产品</h2>
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <button class="btn" onclick="refreshProducts()" style="background: #667eea; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    <i class="fas fa-sync-alt"></i> 刷新产品列表
+                </button>
+                <div id="syncStatus" style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;"></div>
+            </div>
             <div class="products-grid" id="productsGrid">
                 <!-- 产品将通过JavaScript动态加载 -->
             </div>

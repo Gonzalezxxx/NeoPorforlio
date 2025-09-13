@@ -86,12 +86,16 @@ const orderTotal = document.getElementById('orderTotal');
 // 加载产品数据
 function loadProducts() {
     const savedProducts = localStorage.getItem('adminProducts');
+    console.log('加载产品数据...', savedProducts ? '找到数据' : '未找到数据');
+    
     if (savedProducts) {
         products = JSON.parse(savedProducts);
+        console.log('产品数量:', products.length);
     } else {
         products = [...defaultProducts];
         // 保存默认产品到Local Storage
         localStorage.setItem('adminProducts', JSON.stringify(products));
+        console.log('使用默认产品，数量:', products.length);
     }
 }
 
@@ -616,14 +620,44 @@ addToCart = function(productId) {
 function syncProducts() {
     loadProducts();
     renderProducts();
+    updateSyncStatus('产品数据已刷新');
 }
 
-// 定期检查产品数据更新（每5秒检查一次）
-setInterval(syncProducts, 5000);
+// 手动刷新产品
+function refreshProducts() {
+    updateSyncStatus('正在刷新产品数据...');
+    syncProducts();
+}
+
+// 更新同步状态
+function updateSyncStatus(message) {
+    const statusElement = document.getElementById('syncStatus');
+    if (statusElement) {
+        statusElement.textContent = `${message} - ${new Date().toLocaleTimeString()}`;
+    }
+}
+
+// 定期检查产品数据更新（每2秒检查一次）
+setInterval(syncProducts, 2000);
 
 // 监听Local Storage变化
 window.addEventListener('storage', function(e) {
     if (e.key === 'adminProducts') {
+        console.log('检测到产品数据变化，正在同步...');
         syncProducts();
     }
+});
+
+// 监听页面可见性变化（当用户切换回页面时刷新）
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        console.log('页面重新可见，刷新产品数据...');
+        syncProducts();
+    }
+});
+
+// 监听页面焦点变化
+window.addEventListener('focus', function() {
+    console.log('页面获得焦点，刷新产品数据...');
+    syncProducts();
 });
