@@ -746,6 +746,192 @@ body {
     z-index: 3000;
 }
 
+/* 支付模态框 */
+.payment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 4000;
+}
+
+.payment-content {
+    background: white;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.payment-header {
+    padding: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-header h3 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 0;
+}
+
+.close-payment {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.close-payment:hover {
+    background-color: #f0f0f0;
+}
+
+.payment-body {
+    padding: 2rem;
+}
+
+.order-summary {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.order-summary h4 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.order-summary p {
+    margin: 0.5rem 0;
+    color: #666;
+    font-size: 1rem;
+}
+
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.payment-method {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.payment-method::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.payment-method:hover::before {
+    left: 100%;
+}
+
+.payment-method:hover {
+    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.payment-method i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.payment-method:nth-child(1) i { color: #635bff; } /* Stripe */
+.payment-method:nth-child(2) i { color: #0070ba; } /* PayPal */
+.payment-method:nth-child(3) i { color: #07c160; } /* WeChat */
+.payment-method:nth-child(4) i { color: #1677ff; } /* Alipay */
+
+.payment-method span {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.payment-method small {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* 设置页面样式 */
+.settings-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.setting-group {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.setting-group h3 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.setting-actions {
+    text-align: center;
+    padding: 2rem 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 2rem;
+}
+
+.setting-actions .btn {
+    margin: 0 0.5rem;
+}
+
+.setting-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.setting-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
 .checkout-modal.open {
     display: flex;
 }
@@ -990,10 +1176,18 @@ body {
         padding: 1.5rem;
     }
     
-    .story-values {
-        padding: 2rem 1rem;
+        .story-values {
+            padding: 2rem 1rem;
+        }
+        
+        .settings-content {
+            padding: 0;
+        }
+        
+        .setting-group {
+            margin-bottom: 2rem;
+        }
     }
-}
 
 @media (max-width: 480px) {
     .container {

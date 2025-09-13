@@ -6,6 +6,7 @@ let orders = [];
 document.addEventListener('DOMContentLoaded', function() {
     loadProducts();
     loadOrders();
+    loadSettings();
     updateDashboard();
     renderProductsTable();
     
@@ -433,6 +434,58 @@ function showProductStats() {
     });
     
     alert(message);
+}
+
+// 保存设置
+function saveSettings() {
+    const settings = {
+        siteName: document.getElementById('siteName').value,
+        siteDescription: document.getElementById('siteDescription').value,
+        contactPhone: document.getElementById('contactPhone').value,
+        contactEmail: document.getElementById('contactEmail').value,
+        contactAddress: document.getElementById('contactAddress').value,
+        enableStripe: document.getElementById('enableStripe').checked,
+        enablePayPal: document.getElementById('enablePayPal').checked,
+        enableWeChat: document.getElementById('enableWeChat').checked,
+        enableAlipay: document.getElementById('enableAlipay').checked
+    };
+    
+    localStorage.setItem('siteSettings', JSON.stringify(settings));
+    alert('设置保存成功！');
+}
+
+// 重置设置
+function resetSettings() {
+    if (confirm('确定要重置所有设置吗？')) {
+        document.getElementById('siteName').value = '产品商店';
+        document.getElementById('siteDescription').value = '精选商品，品质保证，为您提供最佳的购物体验';
+        document.getElementById('contactPhone').value = '400-123-4567';
+        document.getElementById('contactEmail').value = 'support@productstore.com';
+        document.getElementById('contactAddress').value = '北京市朝阳区xxx街道123号';
+        document.getElementById('enableStripe').checked = true;
+        document.getElementById('enablePayPal').checked = true;
+        document.getElementById('enableWeChat').checked = false;
+        document.getElementById('enableAlipay').checked = false;
+        
+        alert('设置已重置！');
+    }
+}
+
+// 加载设置
+function loadSettings() {
+    const savedSettings = localStorage.getItem('siteSettings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        document.getElementById('siteName').value = settings.siteName || '产品商店';
+        document.getElementById('siteDescription').value = settings.siteDescription || '精选商品，品质保证，为您提供最佳的购物体验';
+        document.getElementById('contactPhone').value = settings.contactPhone || '400-123-4567';
+        document.getElementById('contactEmail').value = settings.contactEmail || 'support@productstore.com';
+        document.getElementById('contactAddress').value = settings.contactAddress || '北京市朝阳区xxx街道123号';
+        document.getElementById('enableStripe').checked = settings.enableStripe !== false;
+        document.getElementById('enablePayPal').checked = settings.enablePayPal !== false;
+        document.getElementById('enableWeChat').checked = settings.enableWeChat || false;
+        document.getElementById('enableAlipay').checked = settings.enableAlipay || false;
+    }
 }
 
 // 同步产品到主页面

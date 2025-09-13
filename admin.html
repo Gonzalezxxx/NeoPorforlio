@@ -252,6 +252,9 @@
                 <button class="admin-nav-btn" onclick="showSection('orders')">
                     <i class="fas fa-shopping-bag"></i> 订单管理
                 </button>
+                <button class="admin-nav-btn" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i> 网站设置
+                </button>
             </div>
         </div>
         
@@ -380,6 +383,75 @@
             <p style="text-align: center; color: #666; padding: 2rem;">
                 <i class="fas fa-info-circle"></i> 订单管理功能将在后续版本中实现
             </p>
+        </div>
+        
+        <!-- 网站设置 -->
+        <div id="settings" class="admin-section">
+            <h2>网站设置</h2>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <h3>基本信息</h3>
+                    <div class="form-group">
+                        <label for="siteName">网站名称</label>
+                        <input type="text" id="siteName" value="产品商店" placeholder="输入网站名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="siteDescription">网站描述</label>
+                        <textarea id="siteDescription" rows="3" placeholder="输入网站描述">精选商品，品质保证，为您提供最佳的购物体验</textarea>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3>联系信息</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPhone">联系电话</label>
+                            <input type="tel" id="contactPhone" value="400-123-4567" placeholder="输入联系电话">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">联系邮箱</label>
+                            <input type="email" id="contactEmail" value="support@productstore.com" placeholder="输入联系邮箱">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactAddress">联系地址</label>
+                        <textarea id="contactAddress" rows="2" placeholder="输入联系地址">北京市朝阳区xxx街道123号</textarea>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3>支付设置</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enableStripe" checked> 启用 Stripe 支付
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enablePayPal" checked> 启用 PayPal 支付
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enableWeChat"> 启用微信支付
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="enableAlipay"> 启用支付宝
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="setting-actions">
+                    <button class="btn btn-success" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> 保存设置
+                    </button>
+                    <button class="btn" onclick="resetSettings()">
+                        <i class="fas fa-undo"></i> 重置设置
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
     

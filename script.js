@@ -309,17 +309,105 @@ function processOrder() {
     // 模拟订单处理
     const orderNumber = 'ORD' + Date.now();
     
-    alert(`订单提交成功！\n订单号：${orderNumber}\n总金额：¥${cartTotal.toFixed(2)}\n\n我们会尽快处理您的订单。`);
+    // 显示支付选项
+    showPaymentOptions(orderNumber);
+}
+
+// 显示支付选项
+function showPaymentOptions(orderNumber) {
+    const paymentModal = document.createElement('div');
+    paymentModal.className = 'payment-modal';
+    paymentModal.innerHTML = `
+        <div class="payment-content">
+            <div class="payment-header">
+                <h3>选择支付方式</h3>
+                <button class="close-payment" onclick="closePayment()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="payment-body">
+                <div class="order-summary">
+                    <h4>订单详情</h4>
+                    <p>订单号：${orderNumber}</p>
+                    <p>总金额：¥${cartTotal.toFixed(2)}</p>
+                </div>
+                <div class="payment-methods">
+                    <div class="payment-method" onclick="processPayment('stripe', '${orderNumber}')">
+                        <i class="fab fa-cc-stripe"></i>
+                        <span>Stripe 支付</span>
+                        <small>支持信用卡、借记卡</small>
+                    </div>
+                    <div class="payment-method" onclick="processPayment('paypal', '${orderNumber}')">
+                        <i class="fab fa-paypal"></i>
+                        <span>PayPal 支付</span>
+                        <small>使用 PayPal 账户</small>
+                    </div>
+                    <div class="payment-method" onclick="processPayment('wechat', '${orderNumber}')">
+                        <i class="fab fa-weixin"></i>
+                        <span>微信支付</span>
+                        <small>扫码支付</small>
+                    </div>
+                    <div class="payment-method" onclick="processPayment('alipay', '${orderNumber}')">
+                        <i class="fab fa-alipay"></i>
+                        <span>支付宝</span>
+                        <small>扫码支付</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
     
-    // 清空购物车
-    cart = [];
-    updateCartDisplay();
+    document.body.appendChild(paymentModal);
+    paymentModal.style.display = 'flex';
+}
+
+// 处理支付
+function processPayment(method, orderNumber) {
+    // 这里可以集成真实的支付API
+    // 目前是模拟支付流程
     
-    // 关闭模态框
-    closeCheckout();
+    let paymentMessage = '';
+    switch(method) {
+        case 'stripe':
+            paymentMessage = '正在跳转到 Stripe 支付页面...';
+            break;
+        case 'paypal':
+            paymentMessage = '正在跳转到 PayPal 支付页面...';
+            break;
+        case 'wechat':
+            paymentMessage = '请使用微信扫描二维码完成支付';
+            break;
+        case 'alipay':
+            paymentMessage = '请使用支付宝扫描二维码完成支付';
+            break;
+    }
     
-    // 重置表单
-    document.getElementById('checkoutForm').reset();
+    // 模拟支付成功
+    setTimeout(() => {
+        alert(`支付成功！\n订单号：${orderNumber}\n总金额：¥${cartTotal.toFixed(2)}\n\n我们会尽快处理您的订单。`);
+        
+        // 清空购物车
+        cart = [];
+        updateCartDisplay();
+        
+        // 关闭所有模态框
+        closePayment();
+        closeCheckout();
+        
+        // 重置表单
+        document.getElementById('checkoutForm').reset();
+    }, 2000);
+    
+    // 显示支付处理中
+    alert(paymentMessage);
+}
+
+// 关闭支付模态框
+function closePayment() {
+    const paymentModal = document.querySelector('.payment-modal');
+    if (paymentModal) {
+        paymentModal.remove();
+    }
 }
 
 // 点击模态框外部关闭
