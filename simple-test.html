@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>简单测试</title>
+</head>
+<body>
+    <h1>产品同步测试</h1>
+    <button onclick="addProduct()">添加测试产品</button>
+    <button onclick="checkData()">检查数据</button>
+    <div id="result"></div>
+    
+    <script>
+        function addProduct() {
+            const product = {
+                id: Date.now(),
+                title: '测试产品_' + new Date().toLocaleTimeString(),
+                price: 999,
+                description: '测试产品',
+                image: '🧪',
+                category: '测试'
+            };
+            
+            let products = JSON.parse(localStorage.getItem('adminProducts') || '[]');
+            products.push(product);
+            localStorage.setItem('adminProducts', JSON.stringify(products));
+            
+            document.getElementById('result').innerHTML = '产品已添加！数量：' + products.length;
+        }
+        
+        function checkData() {
+            const data = localStorage.getItem('adminProducts');
+            document.getElementById('result').innerHTML = '数据：' + (data ? data.length + ' 字符' : '无数据');
+        }
+    </script>
+</body>
+</html>
