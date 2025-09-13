@@ -235,6 +235,9 @@ function addNewProduct() {
     adminProducts.push(newProduct);
     saveProducts();
     
+    // 同步到主页面
+    syncProductsToMain();
+    
     alert('产品添加成功！');
     resetForm();
     renderProductsTable();
@@ -264,6 +267,10 @@ function editProduct(productId) {
     product.description = newDescription;
     
     saveProducts();
+    
+    // 同步到主页面
+    syncProductsToMain();
+    
     renderProductsTable();
     alert('产品更新成功！');
 }
@@ -276,6 +283,10 @@ function deleteProduct(productId) {
     
     adminProducts = adminProducts.filter(p => p.id !== productId);
     saveProducts();
+    
+    // 同步到主页面
+    syncProductsToMain();
+    
     renderProductsTable();
     updateDashboard();
     alert('产品删除成功！');
@@ -491,8 +502,13 @@ function loadSettings() {
 // 同步产品到主页面
 function syncProductsToMain() {
     // 更新主页面的产品数据
-    localStorage.setItem('products', JSON.stringify(adminProducts));
-    alert('产品数据已同步到主页面！');
+    localStorage.setItem('adminProducts', JSON.stringify(adminProducts));
+    
+    // 触发storage事件，让主页面知道数据已更新
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: 'adminProducts',
+        newValue: JSON.stringify(adminProducts)
+    }));
 }
 
 // 页面加载时的初始化

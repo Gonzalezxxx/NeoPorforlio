@@ -1,5 +1,5 @@
-// 产品数据
-const products = [
+// 默认产品数据
+const defaultProducts = [
     {
         id: 1,
         title: "智能手机 Pro Max",
@@ -66,6 +66,9 @@ const products = [
     }
 ];
 
+// 产品数据 - 从Local Storage加载或使用默认数据
+let products = [];
+
 // 购物车数据
 let cart = [];
 let cartTotal = 0;
@@ -80,8 +83,21 @@ const checkoutModal = document.getElementById('checkoutModal');
 const orderItems = document.getElementById('orderItems');
 const orderTotal = document.getElementById('orderTotal');
 
+// 加载产品数据
+function loadProducts() {
+    const savedProducts = localStorage.getItem('adminProducts');
+    if (savedProducts) {
+        products = JSON.parse(savedProducts);
+    } else {
+        products = [...defaultProducts];
+        // 保存默认产品到Local Storage
+        localStorage.setItem('adminProducts', JSON.stringify(products));
+    }
+}
+
 // 初始化页面
 document.addEventListener('DOMContentLoaded', function() {
+    loadProducts();
     renderProducts();
     updateCartDisplay();
     
@@ -595,3 +611,19 @@ addToCart = function(productId) {
     originalAddToCart(productId);
     animateCartCount();
 };
+
+// 监听产品数据变化
+function syncProducts() {
+    loadProducts();
+    renderProducts();
+}
+
+// 定期检查产品数据更新（每5秒检查一次）
+setInterval(syncProducts, 5000);
+
+// 监听Local Storage变化
+window.addEventListener('storage', function(e) {
+    if (e.key === 'adminProducts') {
+        syncProducts();
+    }
+});
